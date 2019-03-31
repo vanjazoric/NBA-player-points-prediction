@@ -2,6 +2,7 @@ import numpy as np
 import glob
 from load_data import *
 from prediction_algorithms import *
+# import matplotlib.pyplot as plt
 
 
 def calculate_rmse(y_predict, y_true):
@@ -12,8 +13,6 @@ def calculate_rmse(y_predict, y_true):
     :param y_true: correct values
     :return: number representing a error
     '''
-
-    print(y_true)
     return np.sqrt(((y_predict - y_true) ** 2).mean())
 
 
@@ -67,6 +66,8 @@ def collect_attributes(dataFrame):
 
     data_pts = dataFrame['PTS'].values
 
+    #ec i schDay koliko uticu?
+
     x0 = np.ones(len(data_pts))
 
     train_x = np.array([x0, data_birthday, data_road, data_fg, data_fga, data_fgp, data_3p, data_3pa, data_3pp,
@@ -102,6 +103,54 @@ def callingBatchGD(player):
     x_test, y_test = collect_attributes(test_data)
     y_pre = x_test.dot(newB)
 
+    rmse = calculate_rmse(np.array(y_pre), y_test)
+
+    print("\nRMSE for player "+player+" is: "+str(rmse)+"\n")
+
+    return rmse
+
+def callingStochasticGD(player):
+    data= laod_data('dataset/'+ player+ '.csv')
+
+    #Split data on test and train dataset.
+    train_data= data[:int(data.shape[0]* 0.85)]
+    test_data= data[int(data.shape[0]* 0.85):]
+    x_test, y_test = collect_attributes(test_data)
+    x, y= collect_attributes(train_data)
+
+    newB, cost_history_retval = stochastic_gradient_descent(x, y, B, recommended_alpha, recommended_iteration_number)
+    y_pre = x_test.dot(newB.T[0])
+    # y_pre = x_test.dot(newB)
+
+    rmse = calculate_rmse(np.array(y_pre), y_test)
+
+    print("\nRMSE for player "+player+" is: "+str(rmse)+"\n")
+
+    return rmse
+
+def callingMultipleLinearRegressionWithNp(player):
+    data= laod_data('dataset/'+ player+ '.csv')
+    print(data)
+    #Split data on test and train dataset.
+    train_data= data[:int(data.shape[0]* 0.85)]
+    test_data= data[int(data.shape[0]* 0.85):]
+
+    x, y= collect_attributes(train_data)
+
+    # newB = multiple_linear_regression_with_np(x, y, B, recommended_alpha, recommended_iteration_number)
+    # print("this is newB")
+    # print(newB)
+    
+    x_test, y_test = collect_attributes(test_data)
+    # y_pre = x_test.dot(newB)
+
+    regr= linear_model.LinearRegression()
+    regr.fit(x, y)
+    # regr.score(x, y)
+
+    y_pre= regr.predict(x_test)
+
+
     print(np.array(y_pre))
 
     rmse = calculate_rmse(np.array(y_pre), y_test)
@@ -109,3 +158,63 @@ def callingBatchGD(player):
     print("\nRMSE for player "+player+" is: "+str(rmse)+"\n")
 
     return rmse
+
+def callingMultipleLinearRegression(player):
+    data= laod_data('dataset/'+ player+ '.csv')
+
+    #Split data on test and train dataset.
+    train_data= data[:int(data.shape[0]* 0.85)]
+    test_data= data[int(data.shape[0]* 0.85):]
+
+    x, y= collect_attributes(train_data)
+    x_test, y_test = collect_attributes(test_data)
+
+    mink = 0
+    minerr = 150000
+    lambdas= np.arange(0, 20, 0.25)
+    for k in lambdas:
+        koef = calculate_koef(x, y, k)
+
+        listK = []
+        listK.append([koef[0],koef[1]])
+        listK.append([0,koef[2]])
+        listK.append([0,koef[3]])
+        listK.append([0,koef[4]])
+        listK.append([0,koef[5]])
+        listK.append([0,koef[6]])
+        listK.append([0,koef[7]])
+        listK.append([0,koef[8]])
+        listK.append([0,koef[9]])
+        listK.append([0,koef[10]])
+        listK.append([0,koef[11]])
+        listK.append([0,koef[12]])
+        listK.append([0,koef[13]])
+        listK.append([0,koef[14]])
+        listK.append([0,koef[15]])
+        listK.append([0,koef[16]])
+        listK.append([0,koef[17]])
+        listK.append([0,koef[18]])
+
+        y_pre = predict(x_test, listK)
+        err= calculate_rmse(y_pre, y_test)
+        if err<minerr:
+            minerr = err
+            mink = k
+    print("MINIMAL:")
+    print(minerr)
+    print("K")
+    print(mink)
+    print("KOEF")
+    print(calculate_koef(x, y,mink))
+    return err
+
+def predict(list_x,list_k):
+    list_x= list_x.T
+    list_y=[]
+    for i in range (0,len(list_x[0])):
+        y=0
+        for j in range(0,len(list_x)):
+            for k in range(0,len(list_k[j])):
+                y = y + ((list_x[j][i] ** k)*list_k[j][k])  
+        list_y.append(y)
+    return list_y
