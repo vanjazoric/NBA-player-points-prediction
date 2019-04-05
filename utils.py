@@ -128,7 +128,6 @@ def callingKNN(player):
 
     x, y = collect_attributes(train_data)
     x_test, y_test = collect_attributes(test_data)
-    print(player)
 
    # By applying PCA, RMSE for all players is too high (about 9) because of small number of components.
    # x, x_test = pca(x, x_test)

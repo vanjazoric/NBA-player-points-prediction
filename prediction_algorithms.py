@@ -52,7 +52,6 @@ def knn(x, y, x_test):
 
 def pca(x_train, x_test):
     pca = PCA(svd_solver='full', n_components=4)
-    print(x_train.shape)
     x_train = pca.fit_transform(x_train)
     x_test = pca.fit_transform(x_test)
     return x_train, x_test
