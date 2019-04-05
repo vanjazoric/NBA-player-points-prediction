@@ -1,5 +1,5 @@
 from utils import *
-from load_data import laod_data
+from load_data import load_data
 from prediction_algorithms import *
 
 
@@ -26,6 +26,7 @@ def main():
 
         for player in players:
             rmse_sum += callingBatchGD(player)
+            #rmse_sum += callingKNN(player)
 
         print('\nGlobal deviation for all players is: \n\n' + str(rmse_sum / len(players)))
 
@@ -46,8 +47,12 @@ def main():
                 print('\nThis player is not supported in this version.')
             else:
                 not_found = False
-                print('\n\nTotal points of ' + player + ' are successfully predicted, with deviation of: '
-                      + str(callingBatchGD(player)) + ' points.')
+                print('\n\nTotal points of ' + player + ' are successfully predicted, '
+                    'with deviation of: ' + str(callingBatchGD(player)) + ' points.')
+                '''
+                print('\n\nTotal points of ' + player + ' are successfully predicted, '
+                     'with deviation of: ' + str(callingKNN(player)) + ' points.')
+                '''
 
     else:
         print("\nWrong menu option, start application again and enter valid option...\n")

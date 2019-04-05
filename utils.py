@@ -89,7 +89,7 @@ def callingBatchGD(player):
     :return: RMSE metrics for given player
     '''
 
-    data = laod_data('dataset/' + player + '.csv')
+    data = load_data('dataset/' + player + '.csv')
 
     # Split data on test and train dataset. Ratio for test and train is 85% : 15%
     train_data = data[:int(data.shape[0] * 0.85)]
@@ -106,6 +106,34 @@ def callingBatchGD(player):
 
     rmse = calculate_rmse(np.array(y_pre), y_test)
 
-    print("\nRMSE for player "+player+" is: "+str(rmse)+"\n")
+    print("\n[BatchGD] RMSE for player "+player+" is: "+str(rmse)+"\n")
 
+    return rmse
+
+
+def callingKNN(player):
+    '''
+    Function for loading data, split on test and train, calling KNN algorithm with data params,
+    do the prediction and return rmse result
+
+    :param player: string name of player, input from keyboard
+    :return: RMSE metrics for given player
+    '''
+
+    data = load_data('dataset/' + player + '.csv')
+
+    # Split data on test and train dataset. Ratio for test and train is 85% : 15%
+    train_data = data[:int(data.shape[0] * 0.85)]
+    test_data = data[int(data.shape[0] * 0.85):]
+
+    x, y = collect_attributes(train_data)
+    x_test, y_test = collect_attributes(test_data)
+
+   # By applying PCA, RMSE for all players is too high (about 9) because of small number of components.
+   # x, x_test = pca(x, x_test)
+
+    predicted = knn(x, y, x_test)
+    print(predicted)
+    rmse = calculate_rmse(np.array(predicted), y_test)
+    print("\n[KNN] RMSE for player "+player+" is: "+str(rmse)+"\n")
     return rmse
