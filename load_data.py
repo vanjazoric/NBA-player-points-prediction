@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def laod_data(file):
+def load_data(file):
     '''
     Function for reading .csv file, drop rows with NA values, encode some columns and return data for prediction
 

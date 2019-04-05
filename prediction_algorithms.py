@@ -1,5 +1,6 @@
 import numpy as np
-
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.decomposition import PCA
 
 recommended_alpha = 0.00001
 B = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
@@ -41,3 +42,17 @@ def cost_function(X, Y, B):
     m = len(Y)
     J = np.sum((X.dot(B) - Y) ** 2)/(2 * m)
     return J
+
+
+def knn(x, y, x_test):
+    knn = KNeighborsClassifier(n_neighbors=4, weights='distance')
+    knn.fit(x,y)
+    return knn.predict(x_test)
+
+
+def pca(x_train, x_test):
+    pca = PCA(svd_solver='full', n_components=4)
+    print(x_train.shape)
+    x_train = pca.fit_transform(x_train)
+    x_test = pca.fit_transform(x_test)
+    return x_train, x_test
