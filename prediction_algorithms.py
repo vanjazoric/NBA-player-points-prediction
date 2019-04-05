@@ -85,17 +85,6 @@ def multiple_linear_regression_with_np(X, Y, B, alpha, iterations):
     B= regr.coef_
     return B
 
-def multiple_linear_regression(X, Y, B, alpha, iterations):
-    '''
-    :param X: 17 columns with needed attributes for prediction
-    :param Y: column representing the points scored in the match
-    :param B: all initial coefficients are set to zero
-    :param alpha: learning rate, initially set to 0.00001
-    :param iterations: number of iterations
-    :return: coefficients given by algorithm and cost history for every iteration
-    '''
-
-
 def calculate_koef(X, Y, lamb):
 #Doing by the formula A = (( X^T * X )^-1) * ( X^T * Y ), A have coefficients of regression, set of coefficients
     i = np.identity(19)
@@ -104,6 +93,7 @@ def calculate_koef(X, Y, lamb):
     x = np.ones((r,1))
     #Matrix X
     xNew= np.hstack((x, X))
+    
     #Matrix Y
     for k in range(0,r):
         newY[k] = Y[k]
@@ -123,6 +113,9 @@ def calculate_koef(X, Y, lamb):
         '''
     #Second part of formula
     b = np.dot(xNew.T,Y)
+    # if(lamb==0):
+    #     print(lamb)
+    #     print(b)
     #Final result of function
     result = np.dot(a,b)
 

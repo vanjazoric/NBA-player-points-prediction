@@ -66,8 +66,6 @@ def collect_attributes(dataFrame):
 
     data_pts = dataFrame['PTS'].values
 
-    #ec i schDay koliko uticu?
-
     x0 = np.ones(len(data_pts))
 
     train_x = np.array([x0, data_birthday, data_road, data_fg, data_fga, data_fgp, data_3p, data_3pa, data_3pp,
@@ -170,8 +168,8 @@ def callingMultipleLinearRegression(player):
     x_test, y_test = collect_attributes(test_data)
 
     mink = 0
-    minerr = 150000
-    lambdas= np.arange(0, 20, 0.25)
+    minerr = 1.5
+    lambdas= np.arange(0, 10, 0.25)
     for k in lambdas:
         koef = calculate_koef(x, y, k)
 
@@ -204,8 +202,32 @@ def callingMultipleLinearRegression(player):
     print(minerr)
     print("K")
     print(mink)
-    print("KOEF")
-    print(calculate_koef(x, y,mink))
+    # print("KOEF")
+    # koef= calculate_koef(x, y,mink)
+    # listK = []
+    # listK.append([koef[0],koef[1]])
+    # listK.append([0,koef[2]])
+    # listK.append([0,koef[3]])
+    # listK.append([0,koef[4]])
+    # listK.append([0,koef[5]])
+    # listK.append([0,koef[6]])
+    # listK.append([0,koef[7]])
+    # listK.append([0,koef[8]])
+    # listK.append([0,koef[9]])
+    # listK.append([0,koef[10]])
+    # listK.append([0,koef[11]])
+    # listK.append([0,koef[12]])
+    # listK.append([0,koef[13]])
+    # listK.append([0,koef[14]])
+    # listK.append([0,koef[15]])
+    # listK.append([0,koef[16]])
+    # listK.append([0,koef[17]])
+    # listK.append([0,koef[18]])
+
+    # y_pre = predict(x_test, listK)
+    # err= calculate_rmse(y_pre, y_test)
+
+
     return err
 
 def predict(list_x,list_k):
