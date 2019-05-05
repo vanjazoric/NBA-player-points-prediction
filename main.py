@@ -68,12 +68,12 @@ def main():
                 not_found = False
                 print('\n\nTotal points of ' + player + ' are successfully predicted, '
                     'with deviation of: '
-                    + str(callingBatchGD(player)) + ' points.')
+                    # + str(callingBatchGD(player)) + ' points.')
                     # + str(callingStochasticGD(player)) + ' points.')
                     # + str(callingMultipleLinearRegression(player)) + ' points.')
                     # + str(callingMultipleLinearRegressionWithNp(player)) + ' points.')
                     # + str(callingKNN(player)) + ' points.')
-                    # + str(callingSVR(player)) + ' points.')
+                    + str(callingSVR(player)) + ' points.')
                     
 
     else:
