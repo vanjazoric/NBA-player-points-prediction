@@ -3,6 +3,7 @@ import glob
 from load_data import *
 from prediction_algorithms import *
 # import matplotlib.pyplot as plt
+from sklearn.linear_model import Ridge
 
 
 def calculate_rmse(y_predict, y_true):
@@ -91,6 +92,7 @@ def callingBatchGD(player):
     data = load_data('dataset/' + player + '.csv')
 
     # Split data on test and train dataset. Ratio for test and train is 85% : 15%
+
     train_data = data[:int(data.shape[0] * 0.85)]
     test_data = data[int(data.shape[0] * 0.85):]
 
@@ -108,15 +110,25 @@ def callingBatchGD(player):
     return rmse
 
 def callingStochasticGD(player):
-    data= laod_data('dataset/'+ player+ '.csv')
+    '''
+    Function for loading data, split on test and train, calling stochastic gradient descent with data params,
+    do the prediction and return rmse result
+
+    :param player: string name of player, input from keyboard
+    :return: RMSE metrics for given player
+    '''
+
+    data= load_data('dataset/'+ player+ '.csv')
 
     #Split data on test and train dataset.
     train_data= data[:int(data.shape[0]* 0.85)]
     test_data= data[int(data.shape[0]* 0.85):]
+
+    x, y = collect_attributes(train_data)
     x_test, y_test = collect_attributes(test_data)
-    x, y= collect_attributes(train_data)
 
     newB, cost_history_retval = stochastic_gradient_descent(x, y, B, recommended_alpha, recommended_iteration_number)
+
     y_pre = x_test.dot(newB.T[0])
     # y_pre = x_test.dot(newB)
 
@@ -127,29 +139,26 @@ def callingStochasticGD(player):
     return rmse
 
 def callingMultipleLinearRegressionWithNp(player):
-    data= laod_data('dataset/'+ player+ '.csv')
-    print(data)
+    '''
+    Function for loading data, split on test and train, calling multiple linear with data params,
+    do the prediction and return rmse result
+
+    :param player: string name of player, input from keyboard
+    :return: RMSE metrics for given player
+    '''
+
+    data= load_data('dataset/'+ player+ '.csv')
+
     #Split data on test and train dataset.
     train_data= data[:int(data.shape[0]* 0.85)]
     test_data= data[int(data.shape[0]* 0.85):]
 
     x, y= collect_attributes(train_data)
-
-    # newB = multiple_linear_regression_with_np(x, y, B, recommended_alpha, recommended_iteration_number)
-    # print("this is newB")
-    # print(newB)
-    
     x_test, y_test = collect_attributes(test_data)
-    # y_pre = x_test.dot(newB)
 
-    regr= linear_model.LinearRegression()
-    regr.fit(x, y)
-    # regr.score(x, y)
+    y_pre = multiple_linear_regression_with_np(x, y, x_test, y_test)
 
-    y_pre= regr.predict(x_test)
-
-
-    print(np.array(y_pre))
+    print(y_pre)
 
     rmse = calculate_rmse(np.array(y_pre), y_test)
 
@@ -185,7 +194,7 @@ def callingKNN(player):
     return rmse
 
 def callingMultipleLinearRegression(player):
-    data= laod_data('dataset/'+ player+ '.csv')
+    data= load_data('dataset/'+ player+ '.csv')
 
     #Split data on test and train dataset.
     train_data= data[:int(data.shape[0]* 0.85)]
@@ -194,76 +203,31 @@ def callingMultipleLinearRegression(player):
     x, y= collect_attributes(train_data)
     x_test, y_test = collect_attributes(test_data)
 
-    mink = 0
     minerr = 1.5
-    lambdas= np.arange(0, 10, 0.25)
-    for k in lambdas:
+
+    list_of_errors=[]
+    for k in range(1, 10):
         koef = calculate_koef(x, y, k)
 
-        listK = []
-        listK.append([koef[0],koef[1]])
-        listK.append([0,koef[2]])
-        listK.append([0,koef[3]])
-        listK.append([0,koef[4]])
-        listK.append([0,koef[5]])
-        listK.append([0,koef[6]])
-        listK.append([0,koef[7]])
-        listK.append([0,koef[8]])
-        listK.append([0,koef[9]])
-        listK.append([0,koef[10]])
-        listK.append([0,koef[11]])
-        listK.append([0,koef[12]])
-        listK.append([0,koef[13]])
-        listK.append([0,koef[14]])
-        listK.append([0,koef[15]])
-        listK.append([0,koef[16]])
-        listK.append([0,koef[17]])
-        listK.append([0,koef[18]])
-
-        y_pre = predict(x_test, listK)
+        y_pre = x_test.dot(koef)
         err= calculate_rmse(y_pre, y_test)
+        list_of_errors.append(err)
         if err<minerr:
             minerr = err
             mink = k
-    print("MINIMAL:")
-    print(minerr)
-    print("K")
-    print(mink)
-    # print("KOEF")
+        # print("MINIMAL:")
+        # print(minerr)
+        # print("K")
+        # print(mink)
+        # print("KOEF")
+        # print(koef)
+
     # koef= calculate_koef(x, y,mink)
-    # listK = []
-    # listK.append([koef[0],koef[1]])
-    # listK.append([0,koef[2]])
-    # listK.append([0,koef[3]])
-    # listK.append([0,koef[4]])
-    # listK.append([0,koef[5]])
-    # listK.append([0,koef[6]])
-    # listK.append([0,koef[7]])
-    # listK.append([0,koef[8]])
-    # listK.append([0,koef[9]])
-    # listK.append([0,koef[10]])
-    # listK.append([0,koef[11]])
-    # listK.append([0,koef[12]])
-    # listK.append([0,koef[13]])
-    # listK.append([0,koef[14]])
-    # listK.append([0,koef[15]])
-    # listK.append([0,koef[16]])
-    # listK.append([0,koef[17]])
-    # listK.append([0,koef[18]])
 
-    # y_pre = predict(x_test, listK)
-    # err= calculate_rmse(y_pre, y_test)
+    # print(list_of_errors)
 
+    y_pre = x_test.dot(koef)
+
+    err= calculate_rmse(y_pre, y_test)
 
     return err
-
-def predict(list_x,list_k):
-    list_x= list_x.T
-    list_y=[]
-    for i in range (0,len(list_x[0])):
-        y=0
-        for j in range(0,len(list_x)):
-            for k in range(0,len(list_k[j])):
-                y = y + ((list_x[j][i] ** k)*list_k[j][k])  
-        list_y.append(y)
-    return list_y

@@ -87,31 +87,32 @@ def stochastic_gradient_descent(X, Y, B, alpha, iterations):
         cost_history[iteration] = cost
     return B, cost_history
 
-def multiple_linear_regression_with_np(X, Y, B, alpha, iterations):
-    # params_lm = {"alpha":0.1, "iterations":1000}
+def multiple_linear_regression_with_np(X, Y, x_test, y_test):
     regr= linear_model.LinearRegression()
     regr.fit(X, Y)
     regr.score(X, Y)
+    y_pred= regr.predict(x_test)
 
-    print('Intercept: \n', regr.intercept_)
-    print('Coefficients: \n', regr.coef_)
-    B= regr.coef_
-    return B
+    # variance score: 1 means perfect prediction
+    print('Variance score: {}'.format(regr.score(x_test, y_test)))
+
+    # print('Intercept: \n', regr.intercept_)
+    # print('Coefficients: \n', regr.coef_)
+    return y_pred
 
 def calculate_koef(X, Y, lamb):
 #Doing by the formula A = (( X^T * X )^-1) * ( X^T * Y ), A have coefficients of regression, set of coefficients
-    i = np.identity(19)
+    i = np.identity(18)
     r = len(Y)
     newY = np.zeros((r,1))
-    x = np.ones((r,1))
-    #Matrix X
-    xNew= np.hstack((x, X))
-    
+
     #Matrix Y
     for k in range(0,r):
         newY[k] = Y[k]
+
     #Calculating first part of formula
-    a = np.matrix(np.add(np.dot(xNew.T,xNew),lamb*i))
+    a = np.matrix(np.add(np.dot(X.T,X),lamb*i))
+
     try:
         a= a.I
     except:
@@ -125,10 +126,8 @@ def calculate_koef(X, Y, lamb):
         determinant is zero
         '''
     #Second part of formula
-    b = np.dot(xNew.T,Y)
-    # if(lamb==0):
-    #     print(lamb)
-    #     print(b)
+    b = np.dot(X.T,Y)
+    
     #Final result of function
     result = np.dot(a,b)
 

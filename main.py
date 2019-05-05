@@ -25,10 +25,10 @@ def main():
         rmse_sum = 0
 
         for player in players:
-            rmse_sum += callingBatchGD(player)
-            #rmse_sum += callingKNN(player)
+            # rmse_sum += callingBatchGD(player)
+            # rmse_sum += callingKNN(player)
             # rmse_sum += callingStochasticGD(player)
-            # rmse_sum += callingMultipleLinearRegression(player)
+            rmse_sum += callingMultipleLinearRegression(player)
             # rmse_sum += callingMultipleLinearRegressionWithNp(player)
 
         print('\nGlobal deviation for all players is: \n\n' + str(rmse_sum / len(players)))
@@ -52,9 +52,9 @@ def main():
                 not_found = False
                 print('\n\nTotal points of ' + player + ' are successfully predicted, '
                     'with deviation of: '
-                    + str(callingBatchGD(player)) + ' points.')
+                    # + str(callingBatchGD(player)) + ' points.')
                     # + str(callingStochasticGD(player)) + ' points.')
-                    # + str(callingMultipleLinearRegression(player)) + ' points.')
+                    + str(callingMultipleLinearRegression(player)) + ' points.')
                     # + str(callingMultipleLinearRegressionWithNp(player)) + ' points.')
                 '''
                 print('\n\nTotal points of ' + player + ' are successfully predicted, '
