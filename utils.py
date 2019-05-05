@@ -89,12 +89,7 @@ def callingBatchGD(player):
     :return: RMSE metrics for given player
     '''
 
-    data = load_data('dataset/' + player + '.csv')
-
-    # Split data on test and train dataset. Ratio for test and train is 85% : 15%
-
-    train_data = data[:int(data.shape[0] * 0.85)]
-    test_data = data[int(data.shape[0] * 0.85):]
+    train_data, test_data = load_data('dataset/' + player + '.csv')
 
     x, y = collect_attributes(train_data)
 
@@ -118,13 +113,7 @@ def callingStochasticGD(player):
     :return: RMSE metrics for given player
     '''
 
-    data= load_data('dataset/'+ player+ '.csv')
-
-    #Split data on test and train dataset.
-    train_data= data[:int(data.shape[0]* 0.85)]
-    test_data= data[int(data.shape[0]* 0.85):]
-
-    x, y = collect_attributes(train_data)
+    train_data, test_data = load_data('dataset/'+ player+ '.csv')
     x_test, y_test = collect_attributes(test_data)
 
     newB, cost_history_retval = stochastic_gradient_descent(x, y, B, recommended_alpha, recommended_iteration_number)
@@ -147,11 +136,7 @@ def callingMultipleLinearRegressionWithNp(player):
     :return: RMSE metrics for given player
     '''
 
-    data= load_data('dataset/'+ player+ '.csv')
-
-    #Split data on test and train dataset.
-    train_data= data[:int(data.shape[0]* 0.85)]
-    test_data= data[int(data.shape[0]* 0.85):]
+    train_data, test_data = load_data('dataset/'+ player+ '.csv')
 
     x, y= collect_attributes(train_data)
     x_test, y_test = collect_attributes(test_data)
@@ -175,12 +160,7 @@ def callingKNN(player):
     :return: RMSE metrics for given player
     '''
 
-    data = load_data('dataset/' + player + '.csv')
-
-    # Split data on test and train dataset. Ratio for test and train is 85% : 15%
-    train_data = data[:int(data.shape[0] * 0.85)]
-    test_data = data[int(data.shape[0] * 0.85):]
-
+    train_data, test_data = load_data('dataset/' + player + '.csv')
     x, y = collect_attributes(train_data)
     x_test, y_test = collect_attributes(test_data)
 
@@ -194,13 +174,9 @@ def callingKNN(player):
     return rmse
 
 def callingMultipleLinearRegression(player):
-    data= load_data('dataset/'+ player+ '.csv')
 
-    #Split data on test and train dataset.
-    train_data= data[:int(data.shape[0]* 0.85)]
-    test_data= data[int(data.shape[0]* 0.85):]
-
-    x, y= collect_attributes(train_data)
+    train_data, test_data = load_data('dataset/'+ player+ '.csv')
+    x, y = collect_attributes(train_data)
     x_test, y_test = collect_attributes(test_data)
 
     minerr = 1.5
@@ -228,6 +204,21 @@ def callingMultipleLinearRegression(player):
 
     y_pre = x_test.dot(koef)
 
+    # print(y_test)
+    # print(y_pre)
+
     err= calculate_rmse(y_pre, y_test)
 
     return err
+
+
+def callingSVR(player):
+    train_data, test_data = load_data('dataset/' + player + '.csv')
+    x, y = collect_attributes(train_data)
+    x_test, y_test = collect_attributes(test_data)
+
+    predicted = svr(x, y, x_test)
+    print(predicted)
+    rmse = calculate_rmse(np.array(predicted), y_test)
+    print("\n[SVR] RMSE for player "+player+" is: "+str(rmse)+"\n")
+    return rmse

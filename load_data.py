@@ -17,4 +17,8 @@ def load_data(file):
     #le.fit(df.dvcat)
     #le.transform(df.dvcat)
 
-    return df
+    # Split data on test and train dataset.
+    train_data = df[:int(df.shape[0] * 0.85)]
+    test_data = df[int(df.shape[0] * 0.85):]
+
+    return train_data, test_data

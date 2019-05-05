@@ -1,7 +1,8 @@
 import numpy as np
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.decomposition import PCA
 from sklearn import linear_model
+from sklearn.decomposition import PCA
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVR
 
 recommended_alpha = 0.00001
 B = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
@@ -132,3 +133,19 @@ def calculate_koef(X, Y, lamb):
     result = np.dot(a,b)
 
     return result.tolist()[0]
+
+
+def svr(x, y, x_test):
+    '''
+        :param C: Penalty parameter C of the error term
+        :param gamma: Kernel coefficient
+        :param epsilon: specifies the epsilon-tube within which no penalty is
+               associated in the training loss function with points
+               predicted within a distance epsilon from the actual value.
+        :param kernel: the kernel type used in the algorithm
+        :param degree: degree of the polynomial kernel function (‘poly’).
+        '''
+    clf = SVR(gamma='auto', C=0.11, epsilon=0.3, kernel='poly', degree=2)
+    clf.fit(x, y)
+    return clf.predict(x_test)
+
