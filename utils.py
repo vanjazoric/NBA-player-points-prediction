@@ -181,11 +181,12 @@ def callingMultipleLinearRegression(player):
     x_validate, y_validate = collect_attributes(validate_data)
     x_test, y_test = collect_attributes(test_data)
 
-    minerr = 2
+    minerr = 5
+    mink=10
 
     list_of_errors=[]
     list_of_koefs= []
-    lambdas = np.arange(0, 10, 0.25)
+    lambdas = np.arange(0, 10, 0.1)
     for k in lambdas:
         koef = calculate_koef(x, y, k)
         list_of_koefs.append(koef)
@@ -196,13 +197,13 @@ def callingMultipleLinearRegression(player):
         if err<minerr:
             minerr = err
             mink = k
-            print("MINIMAL:")
-            print(minerr)
-            print("K")
-            print(mink)
+            # print("MINIMAL:")
+            # print(minerr)
+            # print("K")
+            # print(mink)
 
-    print("this is error 1")
-    print(minerr)
+    # print("this is error 1")
+    # print(minerr)
 
     koef= calculate_koef(x, y,mink)
 
@@ -214,8 +215,8 @@ def callingMultipleLinearRegression(player):
     err2 = calculate_rmse(y_predict2, y_validate)
     # print(y_validate)
     # print(y_predict2)
-    print("this is error 2, error for validate y")
-    print(err2)
+    # print("this is error 2, error for validate y")
+    # print(err2)
     # print(list_of_koefs)
 
     print("\n RMSE for player " + player + " is: " + str(err) + "\n")
@@ -224,7 +225,6 @@ def callingMultipleLinearRegression(player):
 
 def callingSVR(player):
     train_data, test_data = load_data('dataset/' + player + '.csv')
-    print(train_data[0])
     x, y = collect_attributes(train_data)
     x_test, y_test = collect_attributes(test_data)
 

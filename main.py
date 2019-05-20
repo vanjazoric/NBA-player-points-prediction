@@ -11,6 +11,9 @@ def main():
 
     players = get_supported_players()
 
+    best = 100
+    worst = 0
+
     print('Welcome to NBA player point predict application ')
     print('This version of application support ' + str(len(players)) + ' different NBA players. \n\n\n')
 
@@ -25,14 +28,25 @@ def main():
         rmse_sum = 0
 
         for player in players:
-            rmse_sum += callingBatchGD(player)
-            # rmse_sum += callingKNN(player)
-            # rmse_sum += callingStochasticGD(player)
-            # rmse_sum += callingMultipleLinearRegression(player)
-            # rmse_sum += callingMultipleLinearRegressionWithNp(player)
-            # rmse_sum += callingSVR(player)
+            tempRmse = callingSVR(player)
+            # tempRmse = callingBatchGD(player)
+            # tempRmse = callingKNN(player)
+            # tempRmse = callingStochasticGD(player)
+            # tempRmse = callingMultipleLinearRegression(player)
+            # tempRmse = callingMultipleLinearRegressionWithNp(player)
+
+            if tempRmse > worst:
+                worst = tempRmse
+            elif tempRmse < best:
+                best = tempRmse
+
+            rmse_sum += tempRmse
 
         print('\nGlobal deviation for all players is: \n\n' + str(rmse_sum / len(players)))
+
+        print('\nBest result for one player is: ' + str(best))
+        print('\nworst result for one player is: ' + str(worst))
+
 
     elif choice == '2':
 
@@ -53,9 +67,9 @@ def main():
                 not_found = False
                 print('\n\nTotal points of ' + player + ' are successfully predicted, '
                     'with deviation of: '
-                    # + str(callingBatchGD(player)) + ' points.')
+                    + str(callingBatchGD(player)) + ' points.')
                     # + str(callingStochasticGD(player)) + ' points.')
-                    + str(callingMultipleLinearRegression(player)) + ' points.')
+                    # + str(callingMultipleLinearRegression(player)) + ' points.')
                     # + str(callingMultipleLinearRegressionWithNp(player)) + ' points.')
                     # + str(callingKNN(player)) + ' points.')
                     # + str(callingSVR(player)) + ' points.')
