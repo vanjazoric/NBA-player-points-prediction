@@ -25,12 +25,12 @@ def main():
         rmse_sum = 0
 
         for player in players:
-            # rmse_sum += callingBatchGD(player)
+            rmse_sum += callingBatchGD(player)
             # rmse_sum += callingKNN(player)
             # rmse_sum += callingStochasticGD(player)
             # rmse_sum += callingMultipleLinearRegression(player)
             # rmse_sum += callingMultipleLinearRegressionWithNp(player)
-            rmse_sum += callingSVR(player)
+            # rmse_sum += callingSVR(player)
 
         print('\nGlobal deviation for all players is: \n\n' + str(rmse_sum / len(players)))
 
@@ -55,10 +55,10 @@ def main():
                     'with deviation of: '
                     # + str(callingBatchGD(player)) + ' points.')
                     # + str(callingStochasticGD(player)) + ' points.')
-                    # + str(callingMultipleLinearRegression(player)) + ' points.')
+                    + str(callingMultipleLinearRegression(player)) + ' points.')
                     # + str(callingMultipleLinearRegressionWithNp(player)) + ' points.')
                     # + str(callingKNN(player)) + ' points.')
-                    + str(callingSVR(player)) + ' points.')
+                    # + str(callingSVR(player)) + ' points.')
                     
 
     else:

@@ -2,8 +2,10 @@ import numpy as np
 import glob
 from load_data import *
 from prediction_algorithms import *
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from sklearn.linear_model import Ridge
+
+import pandas as pd
 
 
 def calculate_rmse(y_predict, y_true):
@@ -77,7 +79,6 @@ def collect_attributes(dataFrame):
 
     return train_x, train_y
 
-
 def callingBatchGD(player):
     '''
     Function for loading data, split on test and train, calling batch gradient descent with data params,
@@ -114,6 +115,7 @@ def callingStochasticGD(player):
     '''
 
     train_data, test_data = load_data('dataset/'+ player+ '.csv')
+    x, y = collect_attributes(train_data)
     x_test, y_test = collect_attributes(test_data)
 
     newB, cost_history_retval = stochastic_gradient_descent(x, y, B, recommended_alpha, recommended_iteration_number)
@@ -147,7 +149,7 @@ def callingMultipleLinearRegressionWithNp(player):
 
     rmse = calculate_rmse(np.array(y_pre), y_test)
 
-    print("\n[BatchGD] RMSE for player "+player+" is: "+str(rmse)+"\n")
+    print("\n RMSE for player "+player+" is: "+str(rmse)+"\n")
 
     return rmse
 
@@ -174,46 +176,55 @@ def callingKNN(player):
     return rmse
 
 def callingMultipleLinearRegression(player):
-
-    train_data, test_data = load_data('dataset/'+ player+ '.csv')
+    train_data, validate_data, test_data = load_data('dataset/'+ player+ '.csv')
     x, y = collect_attributes(train_data)
+    x_validate, y_validate = collect_attributes(validate_data)
     x_test, y_test = collect_attributes(test_data)
 
-    minerr = 1.5
+    minerr = 2
 
     list_of_errors=[]
-    for k in range(1, 10):
+    list_of_koefs= []
+    lambdas = np.arange(0, 10, 0.25)
+    for k in lambdas:
         koef = calculate_koef(x, y, k)
-
+        list_of_koefs.append(koef)
         y_pre = x_test.dot(koef)
         err= calculate_rmse(y_pre, y_test)
         list_of_errors.append(err)
+        # print(err)
         if err<minerr:
             minerr = err
             mink = k
-        # print("MINIMAL:")
-        # print(minerr)
-        # print("K")
-        # print(mink)
-        # print("KOEF")
-        # print(koef)
+            print("MINIMAL:")
+            print(minerr)
+            print("K")
+            print(mink)
 
-    # koef= calculate_koef(x, y,mink)
+    print("this is error 1")
+    print(minerr)
 
-    # print(list_of_errors)
+    koef= calculate_koef(x, y,mink)
 
     y_pre = x_test.dot(koef)
 
-    # print(y_test)
-    # print(y_pre)
-
     err= calculate_rmse(y_pre, y_test)
+
+    y_predict2= x_validate.dot(koef)
+    err2 = calculate_rmse(y_predict2, y_validate)
+    # print(y_validate)
+    # print(y_predict2)
+    print("this is error 2, error for validate y")
+    print(err2)
+    # print(list_of_koefs)
+
+    print("\n RMSE for player " + player + " is: " + str(err) + "\n")
 
     return err
 
-
 def callingSVR(player):
     train_data, test_data = load_data('dataset/' + player + '.csv')
+    print(train_data[0])
     x, y = collect_attributes(train_data)
     x_test, y_test = collect_attributes(test_data)
 

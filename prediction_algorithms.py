@@ -113,6 +113,7 @@ def calculate_koef(X, Y, lamb):
 
     #Calculating first part of formula
     a = np.matrix(np.add(np.dot(X.T,X),lamb*i))
+    # a = np.matrix(np.dot(X.T,X))
 
     try:
         a= a.I
